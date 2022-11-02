@@ -1,7 +1,7 @@
 {
-  "name": "ledgy-waterfall-challenge",
+  "name": "fso-waterfall-analysis",
   "version": "0.0.0",
-  "description": "Solution for the ledgy waterfall challenge",
+  "description": "",
   "type": "module",
   "engines": {
     "node": ">= 16.13 <17"

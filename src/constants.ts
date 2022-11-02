@@ -1,0 +1,2 @@
+export const DEFAULT_CAP = 2;
+export const DEFAULT_LIQUIDATION_PREFERENCE = 1;
