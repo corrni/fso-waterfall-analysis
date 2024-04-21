@@ -15,15 +15,14 @@ export interface ReducerState {
   totalSharesRemainder: number;
 }
 
+type ReducerActions = 'SET_INITIAL_STATE' | 'COMPUTE_PREFERRED_SHARE' | 'CHECK_AND_APPLY_CAP' | 'COMPUTE_PRO_RATA_SPLIT' |  'CHECK_AND_CONVERT_TO_COMMON';
+type NonInitialReducerActions = Exclude<ReducerActions, 'SET_INITIAL_STATE'>;
+type Payload<T extends NonInitialReducerActions> = T extends T ? { type: T, payload: InvestorType}: never;
 export type ReducerAction =
   | SetInitialState
-  | CheckAndApplyCapAction
-  | ComputePreferredShareAction
-  | ComputeProRataSplitAction
-  | CheckAndConvertToCommonAction;
+  | Payload<NonInitialReducerActions>
 
 // HELPERS
-
 export const getPreviousShareDistribution = (
   state: ReducerState,
   investor: InvestorType,
@@ -59,13 +58,9 @@ const setInitialState = (
     },
   );
 
-interface CheckAndConvertToCommonAction {
-  type: 'CHECK_AND_CONVERT_TO_COMMON';
-  payload: InvestorType;
-}
 const convertToCommonStock = (
   state: ReducerState,
-  investor: CheckAndConvertToCommonAction['payload'],
+  investor: Payload<'CHECK_AND_CONVERT_TO_COMMON'>['payload'],
 ): ReducerState => {
   const shouldConvert =
     investor.shareClass !== ShareClass.Common &&
@@ -93,13 +88,9 @@ const convertToCommonStock = (
   };
 };
 
-interface ComputePreferredShareAction {
-  type: 'COMPUTE_PREFERRED_SHARE';
-  payload: InvestorType;
-}
 const computePreferredShare = (
   state: ReducerState,
-  investor: ComputePreferredShareAction['payload'],
+  investor: Payload<'COMPUTE_PREFERRED_SHARE'>['payload'],
 ): ReducerState => {
   const previousDistribution = getPreviousShareDistribution(state, investor);
 
@@ -155,13 +146,9 @@ const shouldBeCapped = (state: ReducerState, investor: InvestorType) => {
   return unCappedExitAmount >= cappedExitAmount;
 };
 
-interface CheckAndApplyCapAction {
-  type: 'CHECK_AND_APPLY_CAP';
-  payload: InvestorType;
-}
 const checkAndApplyCap = (
   state: ReducerState,
-  investor: CheckAndApplyCapAction['payload'],
+  investor: Payload<'CHECK_AND_APPLY_CAP'>['payload'],
 ): ReducerState => {
   const previousDistribution = getPreviousShareDistribution(state, investor);
 
@@ -202,13 +189,9 @@ const checkAndApplyCap = (
   };
 };
 
-interface ComputeProRataSplitAction {
-  type: 'COMPUTE_PRO_RATA_SPLIT';
-  payload: InvestorType;
-}
 const computeProRataSplit = (
   state: ReducerState,
-  investor: ComputeProRataSplitAction['payload'],
+  investor: Payload<'COMPUTE_PRO_RATA_SPLIT'>['payload'],
 ): ReducerState => {
   const previousDistribution = getPreviousShareDistribution(state, investor);
 
