@@ -33,6 +33,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "tslib": "~2.4"
+    "tslib": "~2.6"
   }
 }
